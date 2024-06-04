@@ -1,4 +1,4 @@
-i#Maven
+#Maven
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -41,7 +41,3 @@ nb-configuration.xml
 
 # Plugin directory
 /.quarkus/cli/plugins/
-
-.project
-.settings
-target
