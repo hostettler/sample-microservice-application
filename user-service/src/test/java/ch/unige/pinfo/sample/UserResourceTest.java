@@ -60,7 +60,7 @@ class UserResourceTest {
                     "postalCode": null,
                     "address": null,
                     "birth": null,
-                    "gender": "Male",
+                    "gender": "MALE",
                     "status": null
                 },
                 """).when().post("/users").then().statusCode(201).body("lastName", equalTo("Doe"), "firstName", equalTo("Alex"), "id",
@@ -82,7 +82,7 @@ class UserResourceTest {
                     "postalCode": null,
                     "address": null,
                     "birth": null,
-                    "gender": "Male",
+                    "gender": "MALE",
                     "status": null
                 }
                 """).when().post("/users").then().statusCode(201).extract().body().jsonPath().get("id");
@@ -93,13 +93,13 @@ class UserResourceTest {
                     "userId": "alex.doe@doe.com",
                     "firstName": "Alex",
                     "lastName": "Doe",
-                    "gender": "Female"
+                    "gender": "FEMALE"
                 }
                 """, newId);
 
         String newGender = given().contentType(ContentType.JSON).body(body).when().put("/users").then().statusCode(201).extract().body().jsonPath()
                 .get("gender");
-        Assertions.assertEquals("Female", newGender);
+        Assertions.assertEquals("FEMALE", newGender);
 
     }
 
