@@ -14,26 +14,22 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class JournalEntry extends PanacheEntityBase {
 
-    
-    
     public enum TransactionType {
-        Debit, Credit
+        DEBIT, CREDIT
     }
-    
 
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
-    public String iban;
-    public Double amount;
-    public String description;
-    public String originalCurrency;
-    public String accountCurrency;
-    public TransactionType type;
+    String iban;
+    Double amount;
+    String description;
+    String originalCurrency;
+    String accountCurrency;
+    TransactionType type;
 
-        public static JournalEntry createEntry(Account sourceAccount, String trxCurrency, Double rate, 
-                Double amount, TransactionType type) {
+    public static JournalEntry createEntry(Account sourceAccount, String trxCurrency, Double rate, Double amount, TransactionType type) {
         JournalEntry e = new JournalEntry();
         e.accountCurrency = sourceAccount.currency;
         e.originalCurrency = trxCurrency;

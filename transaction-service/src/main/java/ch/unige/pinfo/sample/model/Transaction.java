@@ -15,19 +15,18 @@ import lombok.EqualsAndHashCode;
 public class Transaction extends PanacheEntityBase {
 
     public enum TransactionType {
-        Debit, Credit
+        DEBIT, CREDIT
     }
-    
 
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
-    public String sourceIBAN;
-    public String targetIBAN;
-    public Double amount;
-    public String description;
-    public String currency;
-    public TransactionType type;
+    String sourceIBAN;
+    String targetIBAN;
+    Double amount;
+    String description;
+    String currency;
+    TransactionType type;
 
 }

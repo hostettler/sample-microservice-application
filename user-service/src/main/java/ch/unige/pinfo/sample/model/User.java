@@ -17,24 +17,26 @@ import lombok.EqualsAndHashCode;
 public class User extends PanacheEntityBase {
 
     public enum UserStatus {
-        Active, Inactive
+        ACTIVE, INACTIVE
     }
+
     public enum Gender {
-        Male, Female, NonBinary
-    }    
+        MALE, FEMALE, NON_BINARY
+    }
 
     @Id
     @GeneratedValue
     private Long id;
 
-    public String userId;
-    public String firstName;
-    public String lastName;
-    public String city;
-    public String postalCode;
-    public String address;
-    public LocalDate birth;
-    public Gender gender;
-    public UserStatus status;
+    String userId;
+    String firstName;
+    String lastName;
+
+    String city;
+    String postalCode;
+    String address;
+    LocalDate birth;
+    Gender gender;
+    UserStatus status;
 
 }

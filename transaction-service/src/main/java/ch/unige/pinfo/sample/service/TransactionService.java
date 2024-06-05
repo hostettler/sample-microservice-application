@@ -15,15 +15,17 @@ public class TransactionService {
     FxService fxService;
 
     public void execute(Transaction transaction) {
-        Account sourceAccount = accountService.getAccount(transaction.sourceIBAN);
-        JournalEntry firstEntry = JournalEntry.createEntry(sourceAccount, transaction.currency,
-                fxService.getRate(transaction.currency, sourceAccount.currency), transaction.amount, JournalEntry.TransactionType.Debit);
+        Account sourceAccount = accountService.getAccount(transaction.getSourceIBAN());
+        JournalEntry firstEntry = JournalEntry.createEntry(sourceAccount, transaction.getCurrency(),
+                fxService.getRate(transaction.getCurrency(), sourceAccount.getCurrency()), transaction.getAmount(),
+                JournalEntry.TransactionType.DEBIT);
 
         JournalEntry.persist(firstEntry);
 
-        Account destAccount = accountService.getAccount(transaction.targetIBAN);
-        JournalEntry secondEntry = JournalEntry.createEntry(destAccount, transaction.currency,
-                fxService.getRate(transaction.currency, destAccount.currency), transaction.amount, JournalEntry.TransactionType.Credit);
+        Account destAccount = accountService.getAccount(transaction.getTargetIBAN());
+        JournalEntry secondEntry = JournalEntry.createEntry(destAccount, transaction.getCurrency(),
+                fxService.getRate(transaction.getCurrency(), destAccount.getCurrency()), transaction.getAmount(),
+                JournalEntry.TransactionType.CREDIT);
         JournalEntry.persist(secondEntry);
 
     }

@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Account {
 
-    public String accountId;
-    public String currency;
+    String accountId;
+    String currency;
     
 }
