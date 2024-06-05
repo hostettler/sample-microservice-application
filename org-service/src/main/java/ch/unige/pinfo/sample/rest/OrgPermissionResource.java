@@ -4,7 +4,6 @@ import java.util.List;
 
 import ch.unige.pinfo.sample.model.OrgPermission;
 import io.quarkus.oidc.UserInfo;
-import io.quarkus.oidc.UserInfo;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;

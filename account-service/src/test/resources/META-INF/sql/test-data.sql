@@ -1,3 +1,25 @@
-INSERT INTO users(id, user_id, first_name, last_name, gender) VALUES (1, 'john.doe@doe.com', 'John', 'Doe', 0);
-INSERT INTO users(id, user_id, first_name, last_name, gender) VALUES (2, 'jane.doe@doe.com', 'Jane', 'Doe', 1);
-ALTER SEQUENCE users_seq restart with 500;
+INSERT INTO accounts(
+id, 
+account_holder_user_id, 
+branch_id, 
+account_manager_user_id, 
+iban, 
+creation_date, 
+balance,
+interest, 
+balance_updated_date, 
+currency, 
+TYPE, 
+status) VALUES (
+1, 
+'john.doe@doe.com', 
+'111', 
+'boss@boss.com', 
+'iban', 
+'2024-01-01', 
+0, 
+0, 
+'2024-01-01', 
+'EUR',
+0,
+0);

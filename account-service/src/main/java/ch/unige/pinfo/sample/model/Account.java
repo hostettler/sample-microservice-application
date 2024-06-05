@@ -31,10 +31,12 @@ public class Account extends PanacheEntityBase {
     public String accountHolderUserId;
     public String branchId;
     public String accountManagerUserId;
+    public String iban;
     public LocalDate creationDate;
     public BigDecimal balance;
     public BigDecimal interest;
     public LocalDate balanceUpdatedDate;
+    public String currency;
     public Type type;
     public Status status;
     

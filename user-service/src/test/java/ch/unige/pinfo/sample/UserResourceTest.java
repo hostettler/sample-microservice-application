@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import ch.unige.pinfo.sample.model.User;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.SecurityAttribute;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 
@@ -19,7 +20,7 @@ import io.restassured.http.ContentType;
 class UserResourceTest {
 
     @Test
-    @TestSecurity(user = "boss@boss.com", roles = {"admin"})
+    @TestSecurity(user = "boss@boss.com", roles = { "admin" })
     void testAll() {
 
         given().when().get("/users/all").then().statusCode(200).body("[0].firstName", equalTo("John"), "[0].lastName", equalTo("Doe"),
@@ -27,7 +28,7 @@ class UserResourceTest {
     }
 
     @Test
-    @TestSecurity(user = "john.doe@doe.com", roles = {"user"})
+    @TestSecurity(user = "john.doe@doe.com", roles = { "user" }, attributes = { @SecurityAttribute(key = "answer", value = "42") })
     void testGetById() {
         given().when().get("/users/1").then().statusCode(200).body("lastName", equalTo("Doe"), "firstName", equalTo("John"));
         given().when().get("/users/2").then().statusCode(200).body("lastName", equalTo("Doe"), "firstName", equalTo("Jane"));
@@ -45,7 +46,7 @@ class UserResourceTest {
     }
 
     @Test
-    @TestSecurity(user = "boss@boss.com", roles = {"user", "admin"})    
+    @TestSecurity(user = "boss@boss.com", roles = { "user", "admin" })
     void testAddUser() {
         List<User> users = given().when().get("/users/all").then().statusCode(200).extract().body().jsonPath().getList(".");
         long oldSize = users.size();
@@ -70,7 +71,7 @@ class UserResourceTest {
     }
 
     @Test
-    @TestSecurity(user = "john.doe@doe.com", roles = {"user", "admin"})
+    @TestSecurity(user = "john.doe@doe.com", roles = { "user", "admin" }, attributes = { @SecurityAttribute(key = "answer", value = "42") })
     void testUpdateUser() {
         Integer newId = given().contentType(ContentType.JSON).body("""
                 {
@@ -99,27 +100,27 @@ class UserResourceTest {
         String newGender = given().contentType(ContentType.JSON).body(body).when().put("/users").then().statusCode(201).extract().body().jsonPath()
                 .get("gender");
         Assertions.assertEquals("Female", newGender);
-        
+
     }
-    
+
     @Test
-    @TestSecurity(user = "boss@boss.com", roles = {"admin", "user"})
+    @TestSecurity(user = "boss@boss.com", roles = { "admin", "user" })
     void testUknownUser() {
         String body = String.format("""
-                {
-                   "id" : %d,
-                   "userId": "alex.doe@doe.com",
-                   "firstName": "Alex",
-                   "lastName": "Doe",
-                   "gender": "Female"
-               }
-               """, 45875454);
+                 {
+                    "id" : %d,
+                    "userId": "alex.doe@doe.com",
+                    "firstName": "Alex",
+                    "lastName": "Doe",
+                    "gender": "Female"
+                }
+                """, 45875454);
 
-       given().contentType(ContentType.JSON).body(body).when().put("/users").then().statusCode(404);       
+        given().contentType(ContentType.JSON).body(body).when().put("/users").then().statusCode(404);
     }
 
     @Test
-    @TestSecurity(user = "boss@boss.com", roles = {"admin"})
+    @TestSecurity(user = "boss@boss.com", roles = { "admin" })
     void testDeleteUser() {
         List<User> users = given().when().get("/users/all").then().statusCode(200).extract().body().jsonPath().getList(".");
         long oldSize = users.size();
