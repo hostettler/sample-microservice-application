@@ -41,7 +41,7 @@ class UserResourceTest {
         Assertions.assertEquals(user1, user1Bis);
 
         Assertions.assertEquals(
-                "User(id=1, userId=john.doe@doe.com, firstName=John, lastName=Doe, city=null, postalCode=null, address=null, birth=null, gender=Male, status=null)",
+                "User(id=1, userId=john.doe@doe.com, firstName=John, lastName=Doe, city=null, postalCode=null, address=null, birth=null, gender=MALE, status=null)",
                 user1.toString());
     }
 
@@ -112,7 +112,7 @@ class UserResourceTest {
                     "userId": "alex.doe@doe.com",
                     "firstName": "Alex",
                     "lastName": "Doe",
-                    "gender": "Female"
+                    "gender": "FEMALE"
                 }
                 """, 45875454);
 
@@ -134,7 +134,7 @@ class UserResourceTest {
                     "postalCode": null,
                     "address": null,
                     "birth": null,
-                    "gender": "Male",
+                    "gender": "MALE",
                     "status": null
                 },
                 """).when().post("/users").then().statusCode(201).extract().body().jsonPath().get("id");
