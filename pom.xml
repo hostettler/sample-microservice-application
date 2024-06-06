@@ -20,6 +20,9 @@
 		<quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
 		<skipITs>true</skipITs>
+
+		<sonar.organization>hostettler-github</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
 	<modules>
@@ -29,7 +32,6 @@
 		<module>org-service</module>
 		<module>transaction-service</module>
 	</modules>
-	
 
 
 	<dependencyManagement>
