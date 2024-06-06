@@ -11,6 +11,10 @@
 	</parent>
 	<artifactId>user-service</artifactId>
 
+	<properties>
+		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>io.quarkus</groupId>
