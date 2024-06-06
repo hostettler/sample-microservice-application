@@ -18,27 +18,27 @@ import lombok.EqualsAndHashCode;
 public class Account extends PanacheEntityBase {
 
     public enum Status {
-        Active, Inactive
+        ACTIVE, INACTIVE
     }
+
     public enum Type {
-        checking, savings
-    }    
+        CHECKING, SAVING
+    }
 
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
-    public String accountHolderUserId;
-    public String branchId;
-    public String accountManagerUserId;
-    public String iban;
-    public LocalDate creationDate;
-    public BigDecimal balance;
-    public BigDecimal interest;
-    public LocalDate balanceUpdatedDate;
-    public String currency;
-    public Type type;
-    public Status status;
-    
+    String accountHolderUserId;
+    String branchId;
+    String accountManagerUserId;
+    String iban;
+    LocalDate creationDate;
+    BigDecimal balance;
+    BigDecimal interest;
+    LocalDate balanceUpdatedDate;
+    String currency;
+    Type type;
+    Status status;
 
 }

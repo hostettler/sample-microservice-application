@@ -34,9 +34,9 @@ public class JournalEntry extends PanacheEntityBase {
         e.accountCurrency = sourceAccount.currency;
         e.originalCurrency = trxCurrency;
         if (trxCurrency.equals(sourceAccount.currency)) {
-            e.amount = e.amount;
+            e.amount = amount;
         } else {
-            e.amount = e.amount * rate;
+            e.amount = amount * rate;
         }
         e.iban = sourceAccount.accountId;
         e.type = type;

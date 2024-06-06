@@ -7,7 +7,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class AccountService {
 
     public Account getAccount(String sourceIBAN) {
-        // TODO Auto-generated method stub
         return null;
     }
 
