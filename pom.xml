@@ -37,6 +37,7 @@
 		<module>account-service</module>
 		<module>org-service</module>
 		<module>transaction-service</module>
+		<module>aggregate-coverage-report</module>
 	</modules>
 
 
