@@ -21,6 +21,7 @@
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
 		<skipITs>true</skipITs>
 
+		<sonar.projectKey>hostettler-github</sonar.projectKey>
 		<sonar.organization>hostettler-github</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
