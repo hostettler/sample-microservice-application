@@ -13,13 +13,10 @@ import lombok.EqualsAndHashCode;
 public class OrgPermission extends PanacheEntity {
 
     public enum PERMISSION {
-        NONE,
-        REDACTED,
-        READ_ONLY,
-        READ_WRITE,
+        NONE, REDACTED, READ_ONLY, READ_WRITE,
     }
-    
-    public String userId;
-    public AbstractOrganizationStructureElement org;
-    public PERMISSION permission;
+
+    String userId;
+    AbstractOrganizationStructureElement org;
+    PERMISSION permission;
 }

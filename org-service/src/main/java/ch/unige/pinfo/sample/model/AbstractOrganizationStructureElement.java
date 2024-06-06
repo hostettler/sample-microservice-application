@@ -11,9 +11,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @Entity
 public abstract class AbstractOrganizationStructureElement extends PanacheEntity {
-    public String name;
-    public String address;
-    public String city;
-    public String postalCode;
-    
+    String name;
+    String address;
+    String city;
+    String postalCode;
+
 }

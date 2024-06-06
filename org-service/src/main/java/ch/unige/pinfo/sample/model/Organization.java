@@ -4,5 +4,5 @@ import java.util.List;
 
 public class Organization extends AbstractOrganizationStructureElement {
 
-    public List<BusinessEntity> entity;
+    List<BusinessEntity> entity;
 }
