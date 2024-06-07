@@ -21,11 +21,12 @@
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
 		<skipITs>true</skipITs>
 
-		<sonar.coverage.jacoco.xmlReportPaths> ${project.basedir}/aggregate-coverage-report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-	    	<!-- Sonar -->
-	    	<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-	    	<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-	    	<sonar.language>java</sonar.language>
+		<sonar.coverage.jacoco.xmlReportPaths>
+			${project.basedir}/aggregate-coverage-report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<!-- Sonar -->
+		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.language>java</sonar.language>
 		<sonar.projectKey>hostettler_sample-microservice-application</sonar.projectKey>
 		<sonar.organization>hostettler-github</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
