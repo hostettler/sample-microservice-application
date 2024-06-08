@@ -6,13 +6,15 @@
 
 	<parent>
 		<groupId>ch.unige.pinfo.sample</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>sample-application</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>user-service</artifactId>
 
 	<properties>
-		<sonar.coverage.jacoco.xmlReportPaths>${project.build.outputDirectory}/jacoco-report/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.coverage.jacoco.xmlReportPaths>
+			${project.build.outputDirectory}/jacoco-report/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<dependencies>

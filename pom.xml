@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ch.unige.pinfo.sample</groupId>
-	<artifactId>parent</artifactId>
+	<artifactId>sample-application</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -21,8 +21,7 @@
 		<quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
 		<skipITs>true</skipITs>
 
-		<sonar.coverage.jacoco.xmlReportPaths>
-			${project.basedir}/aggregate-coverage-report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.coverage.jacoco.xmlReportPaths>./aggregate-coverage-report/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
@@ -86,12 +85,15 @@
 				<version>${surefire-plugin.version}</version>
 				<configuration>
 					<systemPropertyVariables>
-						<java.util.logging.manager>
-							org.jboss.logmanager.LogManager</java.util.logging.manager>
-						<maven.home>${maven.home}</maven.home>
+						<quarkus.jacoco.data-file>
+							${maven.multiModuleProjectDirectory}/target/jacoco.exec</quarkus.jacoco.data-file>
+						<quarkus.jacoco.reuse-data-file>true</quarkus.jacoco.reuse-data-file>
+						<quarkus.jacoco.report-location>
+							${maven.multiModuleProjectDirectory}/target/coverage</quarkus.jacoco.report-location>
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>${surefire-plugin.version}</version>
