@@ -15,6 +15,13 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 public class ConsistencyCheckService {
 
+    EmbeddedCacheManager emc;
+    
+    @Inject
+    public ConsistencyCheckService(EmbeddedCacheManager emc) {
+        this.emc = emc;
+    }
+    
     public boolean checkUserExists(String userId) {
         return getUserCache().get(userId) != null;
     }
@@ -24,8 +31,6 @@ public class ConsistencyCheckService {
     }
 
 
-    @Inject
-    EmbeddedCacheManager emc;
     
     @Channel("user-command")
     Emitter<String> usersCommandsEmmitter;

@@ -23,13 +23,13 @@ public class BusinessEntity extends AbstractOrganizationStructureElement {
     
     @OneToMany(mappedBy = "businessEntity")
     @JsonManagedReference
-    List<Branch> branches;
+    private List<Branch> branches;
 
     @ManyToOne
     @JsonBackReference
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    Organization organization;
+    private Organization organization;
     
     public void addBranch(Branch branch) {
         if (branches == null) {

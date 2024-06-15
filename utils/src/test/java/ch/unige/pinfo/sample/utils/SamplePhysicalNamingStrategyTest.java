@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 
 import ch.unige.pinfo.sample.util.SamplePhysicalNamingStrategy;
 
-public class SamplePhysicalNamingStrategyTest {
+class SamplePhysicalNamingStrategyTest {
 
     @Test
-    public void test() {
+    void test() {
         Assertions.assertEquals("branches", new SamplePhysicalNamingStrategy().toPhysicalTableName(new Identifier("branch", false), null).toString());
         Assertions.assertEquals("entities", new SamplePhysicalNamingStrategy().toPhysicalTableName(new Identifier("entity", false), null).toString());
         Assertions.assertEquals("use_r", new SamplePhysicalNamingStrategy().toPhysicalCatalogName(new Identifier("useR", false), null).toString());

@@ -20,7 +20,7 @@ public class Organization extends AbstractOrganizationStructureElement {
     
     @OneToMany(mappedBy = "organization")
     @JsonManagedReference
-    List<BusinessEntity> businessEntities;
+    private List<BusinessEntity> businessEntities;
     
     public void addBusinessEntity(BusinessEntity entity) {
         if (this.businessEntities == null) {

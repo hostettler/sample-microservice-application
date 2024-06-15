@@ -16,7 +16,7 @@ public class OrgPermission extends PanacheEntity {
         NONE, REDACTED, READ_ONLY, READ_WRITE,
     }
 
-    String userId;
-    AbstractOrganizationStructureElement org;
-    PERMISSION permission;
+    private String userId;
+    private AbstractOrganizationStructureElement org;
+    private PERMISSION permission;
 }
