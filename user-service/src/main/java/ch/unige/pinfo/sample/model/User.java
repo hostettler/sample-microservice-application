@@ -2,6 +2,7 @@ package ch.unige.pinfo.sample.model;
 
 import java.time.LocalDate;
 
+import ch.unige.pinfo.sample.util.PII;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Entity;
@@ -29,14 +30,18 @@ public class User extends PanacheEntityBase {
     private Long id;
 
     String userId;
+    @PII
     String firstName;
+    @PII
     String lastName;
 
     String city;
     String postalCode;
+    @PII
     String address;
+    @PII
     LocalDate birth;
     Gender gender;
-    UserStatus status;
+    UserStatus status = UserStatus.ACTIVE;
 
 }

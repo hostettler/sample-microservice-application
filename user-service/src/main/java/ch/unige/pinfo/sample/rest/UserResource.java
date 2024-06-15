@@ -6,6 +6,7 @@ import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.ResponseStatus;
 
 import ch.unige.pinfo.sample.model.User;
+import ch.unige.pinfo.sample.service.UserService;
 import io.quarkus.panache.common.Sort;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
@@ -19,6 +20,7 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -31,13 +33,23 @@ public class UserResource {
 
     @Inject
     SecurityIdentity securityIdentity;
-
     
+    @Inject
+    private UserService userService;
+
     @GET
     @RolesAllowed("user")
     @Path("/me")
     public String me(@Context SecurityContext securityContext) {
         return securityContext.getUserPrincipal().getName();
+    }
+
+    @GET
+    @Path("/ids")
+    @RolesAllowed({ "admin"})
+    public List<String> getIds() {
+        LOG.info("List all user Ids");
+        return User.find("select userId from User").project(String.class).list();
     }
     
     @GET
@@ -50,20 +62,19 @@ public class UserResource {
 
     @GET
     @Path("/{customerId}")
-    @RolesAllowed("user")
-    public User get(String customerId) {
+    @RolesAllowed({ "admin", "user" })
+    public User get(@PathParam("customerId") String customerId) {
         return User.findById(customerId);
     }
 
     @POST
-    @Transactional
     @ResponseStatus(201)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({ "admin", "user" })
     public User add(User user) {
-        LOG.infof("Persist user with userId : %s", user.getUserId());
-        User.persist(user);
+        LOG.infof("Create user with userId : %s", user.getUserId());
+        userService.create(user);        
         return user;
     }
 
@@ -92,17 +103,14 @@ public class UserResource {
         entity.setCity(user.getCity());
         entity.setPostalCode(user.getPostalCode());
         entity.setFirstName(user.getFirstName());
-        entity.setLastName(user.getLastName());
 
         return user;
     }
 
     @DELETE
-    @Transactional
     @Path("/{id}")
     @RolesAllowed({ "admin", "user" })
     public void delete(Long id) {
-        LOG.infof("delete user by id : %d", id);
-        User.deleteById(id);
+        userService.disableUser(id);
     }
 }

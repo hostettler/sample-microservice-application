@@ -33,7 +33,15 @@ public class SamplePhysicalNamingStrategy implements PhysicalNamingStrategy {
     public Identifier toPhysicalTableName(final Identifier identifier, final JdbcEnvironment jdbcEnv) {
         String table = convertToSnakeCase(identifier).toString();
         if (!table.substring(table.length() -1 ).equals("s")) {
-            table += "s";
+            if (table.substring(table.length() - 1).equals("y")) {
+                table = table.substring(0, table.length() - 1) + "ies";
+            } else if (table.substring(table.length() - 1).equals("h")) {
+                table += "es";
+            } else if (table.substring(table.length() - 1).equals("x")) {
+                table += "es";
+            } else {                
+                table += "s";
+            }
         }
         return Identifier.toIdentifier(table);
     }

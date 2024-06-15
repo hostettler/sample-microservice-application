@@ -9,20 +9,19 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public class TransactionService {
 
-    @Inject
-    AccountService accountService;
+
     @Inject
     FxService fxService;
 
     public void execute(Transaction transaction) {
-        Account sourceAccount = accountService.getAccount(transaction.getSourceIBAN());
+        Account sourceAccount = Account.findById(transaction.getSourceIBAN());
         JournalEntry firstEntry = JournalEntry.createEntry(sourceAccount, transaction.getCurrency(),
                 fxService.getRate(transaction.getCurrency(), sourceAccount.getCurrency()), transaction.getAmount(),
                 JournalEntry.TransactionType.DEBIT);
 
         JournalEntry.persist(firstEntry);
 
-        Account destAccount = accountService.getAccount(transaction.getTargetIBAN());
+        Account destAccount = Account.findById(transaction.getTargetIBAN());
         JournalEntry secondEntry = JournalEntry.createEntry(destAccount, transaction.getCurrency(),
                 fxService.getRate(transaction.getCurrency(), destAccount.getCurrency()), transaction.getAmount(),
                 JournalEntry.TransactionType.CREDIT);

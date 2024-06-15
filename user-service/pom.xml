@@ -47,7 +47,14 @@
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-smallrye-openapi</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-messaging-rabbitmq</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-smallrye-reactive-messaging</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -63,6 +70,11 @@
 		</dependency>
 
 
+		<dependency>
+			<groupId>io.smallrye.reactive</groupId>
+			<artifactId>smallrye-reactive-messaging-in-memory</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>io.quarkus</groupId>
 			<artifactId>quarkus-junit5</artifactId>

@@ -15,10 +15,18 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.SecurityAttribute;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
+import io.smallrye.reactive.messaging.memory.InMemoryConnector;
+import io.smallrye.reactive.messaging.memory.InMemorySink;
+import jakarta.enterprise.inject.Any;
+import jakarta.inject.Inject;
 
 @QuarkusTest
 class UserResourceTest {
 
+    @Inject
+    @Any
+    InMemoryConnector inMemoryConnector;
+    
     @Test
     @TestSecurity(user = "boss@boss.com", roles = { "admin" })
     void testAll() {
@@ -68,6 +76,11 @@ class UserResourceTest {
 
         users = given().when().get("/users/all").then().statusCode(200).extract().body().jsonPath().getList(".");
         Assertions.assertEquals(oldSize + 1, users.size());
+        
+        InMemorySink<User> eventQueue = inMemoryConnector.sink("user-update");
+        User u = eventQueue.received().get(0).getPayload();
+        Assertions.assertEquals("alex.doe@doe.com", u.getUserId());
+        
     }
 
     @Test
@@ -82,8 +95,7 @@ class UserResourceTest {
                     "postalCode": null,
                     "address": null,
                     "birth": null,
-                    "gender": "MALE",
-                    "status": null
+                    "gender": "MALE"
                 }
                 """).when().post("/users").then().statusCode(201).extract().body().jsonPath().get("id");
 
@@ -120,7 +132,7 @@ class UserResourceTest {
     }
 
     @Test
-    @TestSecurity(user = "boss@boss.com", roles = { "admin" })
+    @TestSecurity(user = "boss@boss.com", roles = { "admin", "user" })
     void testDeleteUser() {
         List<User> users = given().when().get("/users/all").then().statusCode(200).extract().body().jsonPath().getList(".");
         long oldSize = users.size();
@@ -134,8 +146,7 @@ class UserResourceTest {
                     "postalCode": null,
                     "address": null,
                     "birth": null,
-                    "gender": "MALE",
-                    "status": null
+                    "gender": "MALE"
                 },
                 """).when().post("/users").then().statusCode(201).extract().body().jsonPath().get("id");
 
@@ -145,7 +156,23 @@ class UserResourceTest {
         given().contentType(ContentType.JSON).when().delete("/users/" + newId).then().statusCode(204);
 
         users = given().when().get("/users/all").then().statusCode(200).extract().body().jsonPath().getList(".");
-        Assertions.assertEquals(oldSize, users.size());
+        
+        Assertions.assertEquals(oldSize + 1, users.size());
+        User user = given().when().get("/users/" + newId).then().statusCode(200).extract().body().as(User.class);
+        Assertions.assertEquals(User.UserStatus.INACTIVE, user.getStatus());
+        
+        InMemorySink<User> eventQueue = inMemoryConnector.sink("user-update");
+        User u = eventQueue.received().get(eventQueue.received().size() -1).getPayload();
+        Assertions.assertEquals(User.UserStatus.INACTIVE, u.getStatus());
 
     }
+    
+    @Test
+    @TestSecurity(user = "boss@boss.com", roles = { "admin" })
+    void testListAllIds() {       
+        List<String> ids = given().when().get("/users/ids").then().statusCode(200).extract().body().jsonPath().getList(".");
+        System.out.println(ids);
+        Assertions.assertEquals(4, ids.size());
+    }
+    
 }

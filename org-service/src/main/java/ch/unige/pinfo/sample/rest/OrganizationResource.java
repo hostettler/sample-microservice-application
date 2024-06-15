@@ -2,12 +2,13 @@ package ch.unige.pinfo.sample.rest;
 
 import java.util.List;
 
-import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.ResponseStatus;
 
 import ch.unige.pinfo.sample.model.Branch;
+import ch.unige.pinfo.sample.model.BusinessEntity;
 import ch.unige.pinfo.sample.model.Organization;
 import io.quarkus.panache.common.Sort;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -16,13 +17,13 @@ import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/organizations")
 public class OrganizationResource {
 
-    private static final Logger LOG = Logger.getLogger(OrganizationResource.class);
 
     @GET
     @Path("/all")
@@ -32,7 +33,7 @@ public class OrganizationResource {
 
     @GET
     @Path("/{orgId}")
-    public Organization get(String orgId) {
+    public Organization get(@PathParam("orgId") String orgId) {
         return Organization.findById(orgId);
     }
 
@@ -41,6 +42,7 @@ public class OrganizationResource {
     @ResponseStatus(201)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "admin"})
     public Organization add(Organization org) {
         Organization.persist(org);
         return org;
@@ -51,6 +53,7 @@ public class OrganizationResource {
     @ResponseStatus(201)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "admin"})
     public Organization update(Organization org) {
         Organization entity = Organization.findById(org.id);
         if (entity == null) {
@@ -64,11 +67,30 @@ public class OrganizationResource {
         return org;
     }
 
+    @PUT
+    @Transactional
+    @ResponseStatus(201)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "admin"})
+    @Path("/add-business-entity/{orgId}/{businessEntityId}")
+    public void addBusinessEntity(long orgId, long businessEntityId) {
+        Organization org = Organization.findById(orgId);
+        if(org == null) {
+            throw new NotFoundException();
+        }
+        BusinessEntity be = BusinessEntity.findById(businessEntityId);
+        if(be == null) {
+            throw new NotFoundException();
+        }
+        org.addBusinessEntity(be);
+    }
+    
     @DELETE
     @Transactional
     @Path("/{id}")
+    @RolesAllowed({ "admin"})
     public void delete(Long id) {
-        LOG.infof("delete user by id : {}", id);
         Branch.deleteById(id);
     }
 }

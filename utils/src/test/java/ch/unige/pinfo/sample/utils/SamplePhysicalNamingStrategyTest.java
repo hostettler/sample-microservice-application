@@ -10,6 +10,8 @@ public class SamplePhysicalNamingStrategyTest {
 
     @Test
     public void test() {
+        Assertions.assertEquals("branches", new SamplePhysicalNamingStrategy().toPhysicalTableName(new Identifier("branch", false), null).toString());
+        Assertions.assertEquals("entities", new SamplePhysicalNamingStrategy().toPhysicalTableName(new Identifier("entity", false), null).toString());
         Assertions.assertEquals("use_r", new SamplePhysicalNamingStrategy().toPhysicalCatalogName(new Identifier("useR", false), null).toString());
         Assertions.assertEquals("use_rs", new SamplePhysicalNamingStrategy().toPhysicalCatalogName(new Identifier("useRs", false), null).toString());
         Assertions.assertEquals("users", new SamplePhysicalNamingStrategy().toPhysicalCatalogName(new Identifier("users", false), null).toString());

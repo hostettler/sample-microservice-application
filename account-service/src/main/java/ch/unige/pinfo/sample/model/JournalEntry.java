@@ -38,7 +38,7 @@ public class JournalEntry extends PanacheEntityBase {
         } else {
             e.amount = amount * rate;
         }
-        e.iban = sourceAccount.accountId;
+        e.iban = sourceAccount.iban;
         e.type = type;
         return e;
     }
