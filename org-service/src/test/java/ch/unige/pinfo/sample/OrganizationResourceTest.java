@@ -15,7 +15,7 @@ import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 
 @QuarkusTest
-public class OrganizationResourceTest {
+class OrganizationResourceTest {
 
     @Test
     @TestSecurity(user = "boss@boss.com", roles = { "admin" })

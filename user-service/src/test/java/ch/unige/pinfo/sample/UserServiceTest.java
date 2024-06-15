@@ -1,6 +1,10 @@
 package ch.unige.pinfo.sample;
 
-import org.junit.jupiter.api.Assertions;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
+import org.awaitility.Awaitility;
+import static org.hamcrest.Matchers.equalTo;
 import org.junit.jupiter.api.Test;
 
 import ch.unige.pinfo.sample.model.User;
@@ -13,7 +17,7 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 
 @QuarkusTest
-public class UserServiceTest {
+class UserServiceTest {
 
     @Inject
     UserService userService;
@@ -29,6 +33,15 @@ public class UserServiceTest {
         InMemorySource<String> command = inMemoryConnector.source("user-command");
         command.send("get-all");
         Thread.sleep(2000);
-        Assertions.assertEquals(messageInQueue + User.findAll().list().size(), eventQueue.received().size());
+        Callable<Integer> actualValueSupplier = new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                return eventQueue.received().size();
+            }
+        };
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).until(actualValueSupplier, equalTo(messageInQueue + User.findAll().list().size()));
+
     }
+
 }
