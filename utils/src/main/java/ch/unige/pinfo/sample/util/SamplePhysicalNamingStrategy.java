@@ -31,7 +31,9 @@ public class SamplePhysicalNamingStrategy implements PhysicalNamingStrategy {
 
     @Override
     public Identifier toPhysicalTableName(final Identifier identifier, final JdbcEnvironment jdbcEnv) {
-        String table = convertToSnakeCase(identifier).toString();
+        Identifier id = convertToSnakeCase(identifier);
+        assert id != null;
+        String table = id.toString();
         if (!table.substring(table.length() -1 ).equals("s")) {
             if (table.substring(table.length() - 1).equals("y")) {
                 table = table.substring(0, table.length() - 1) + "ies";

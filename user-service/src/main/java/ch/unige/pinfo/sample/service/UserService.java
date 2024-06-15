@@ -14,7 +14,7 @@ public class UserService {
 
     @Channel("user-update")
     Emitter<User> usersUpdateEmmitter;
-
+        
     @Incoming("user-command")
     @Transactional
     public void userCommand(String command) {

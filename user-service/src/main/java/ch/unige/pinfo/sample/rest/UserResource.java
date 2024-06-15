@@ -31,12 +31,15 @@ public class UserResource {
 
     private static final Logger LOG = Logger.getLogger(UserResource.class);
 
-    @Inject
-    SecurityIdentity securityIdentity;
-    
-    @Inject
+    private SecurityIdentity securityIdentity;
     private UserService userService;
 
+    @Inject
+    UserResource(SecurityIdentity securityIdentity, UserService userService) {
+        this.securityIdentity = securityIdentity;
+        this.userService = userService;
+    }
+    
     @GET
     @RolesAllowed("user")
     @Path("/me")

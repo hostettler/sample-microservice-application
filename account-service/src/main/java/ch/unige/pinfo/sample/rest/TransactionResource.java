@@ -15,9 +15,13 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/transactions")
 public class TransactionResource {
 
-    @Inject
     TransactionService transactionService;
 
+    @Inject
+    public TransactionResource(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
+    
     @POST
     @Transactional 
     @ResponseStatus(201)

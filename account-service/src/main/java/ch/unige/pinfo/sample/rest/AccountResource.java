@@ -21,10 +21,14 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/accounts")
 public class AccountResource {
 
-    @Inject
     BalanceService balanceService;
-    @Inject 
     ConsistencyCheckService checkService;
+    
+    @Inject
+    public AccountResource(BalanceService balanceService, ConsistencyCheckService checkService) {
+        this.balanceService = balanceService;
+        this.checkService = checkService;
+    }
     
     @POST
     @Transactional
@@ -35,15 +39,15 @@ public class AccountResource {
         //Check whether the user ids refers to existing ones
         if (!checkService.checkUserExists(account.getAccountHolderUserId())) {
             throw new IllegalArgumentException("The account holder id is not know in the system.");
-        };
+        }
         if (checkService.checkUserExists(account.getAccountManagerUserId())) {
             throw new IllegalArgumentException("The account manager id is not know in the system.");
-        };
+        }
         if (checkService.checkOrganisationBranchId(account.getBranchId())) {
             throw new IllegalArgumentException("The branch is not know in the system.");
-        };        
+        }   
         
-        Account.persist(account);
+        account.persist();
         return account;
     }
     

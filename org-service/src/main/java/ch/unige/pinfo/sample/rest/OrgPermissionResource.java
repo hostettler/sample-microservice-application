@@ -15,10 +15,14 @@ import jakarta.ws.rs.Path;
 @Authenticated
 public class OrgPermissionResource {
 
-    @Inject
     UserInfo userInfo;
-    @Inject
     SecurityIdentity identity;
+
+    @Inject
+    public OrgPermissionResource(UserInfo userInfo, SecurityIdentity identity) {
+        this.userInfo = userInfo;
+        this.identity = identity;
+    }
     
     @GET    
     @Path("/{permissionId}")
