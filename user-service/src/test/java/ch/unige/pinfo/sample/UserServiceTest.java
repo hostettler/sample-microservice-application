@@ -27,7 +27,7 @@ class UserServiceTest {
     InMemoryConnector inMemoryConnector;
 
     @Test
-    void testListAllIds() throws InterruptedException {
+    void testListAllIds() {
         InMemorySink<User> eventQueue = inMemoryConnector.sink("user-update");
         int messageInQueue = eventQueue.received().size();
         InMemorySource<String> command = inMemoryConnector.source("user-command");
