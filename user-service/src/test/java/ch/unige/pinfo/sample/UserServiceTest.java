@@ -29,7 +29,7 @@ class UserServiceTest {
     @Test
     void testListAllIds() throws InterruptedException {
         InMemorySink<User> eventQueue = inMemoryConnector.sink("user-update");
-        long messageInQueue = eventQueue.received().size();
+        int messageInQueue = eventQueue.received().size();
         InMemorySource<String> command = inMemoryConnector.source("user-command");
         command.send("get-all");
         Thread.sleep(2000);
@@ -40,7 +40,8 @@ class UserServiceTest {
             }
         };
 
-        Awaitility.await().atMost(2, TimeUnit.SECONDS).until(actualValueSupplier, equalTo(messageInQueue + User.findAll().list().size()));
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).until(actualValueSupplier, 
+                equalTo(messageInQueue + User.findAll().list().size()));
 
     }
 
