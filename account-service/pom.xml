@@ -13,7 +13,6 @@
 	<artifactId>account-service</artifactId>
 
 	<properties>
-		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 		<version.infinispan>15.0.4.Final</version.infinispan>
 	</properties>
 

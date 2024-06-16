@@ -24,6 +24,7 @@
 		<sonar.coverage.jacoco.xmlReportPaths>
 			${project.build.directory}/jacoco-report/jacoco.xml,
 			${project.build.directory}/site/jacoco/jacoco.xml,
+			${project.build.directory}/coverage/jacoco.xml,
 			user-service/${project.build.directory}/coverage/jacoco.xml,
 			org-service/${project.build.directory}/coverage/jacoco.xml,
 			account-service/${project.build.directory}/coverage/jacoco.xml
