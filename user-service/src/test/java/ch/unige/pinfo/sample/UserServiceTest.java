@@ -32,7 +32,6 @@ class UserServiceTest {
         int messageInQueue = eventQueue.received().size();
         InMemorySource<String> command = inMemoryConnector.source("user-command");
         command.send("get-all");
-        Thread.sleep(2000);
         Callable<Integer> actualValueSupplier = new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
