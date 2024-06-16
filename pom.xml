@@ -24,10 +24,11 @@
 		<sonar.coverage.jacoco.xmlReportPaths>
 			${project.build.directory}/jacoco-report/jacoco.xml,
 			${project.build.directory}/site/jacoco/jacoco.xml,
-			${project.build.directory}/coverage/jacoco.xml,
+			${project.build.directory}/coverage/jacoco.xml
+			<!--,
 			user-service/${project.build.directory}/coverage/jacoco.xml,
 			org-service/${project.build.directory}/coverage/jacoco.xml,
-			account-service/${project.build.directory}/coverage/jacoco.xml
+			account-service/${project.build.directory}/coverage/jacoco.xml-->
 		</sonar.coverage.jacoco.xmlReportPaths>
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -92,10 +93,10 @@
 				<configuration>
 					<systemPropertyVariables>
 						<quarkus.jacoco.data-file>
-							${maven.multiModuleProjectDirectory}/${project.build.outputDirectory}/jacoco.exec</quarkus.jacoco.data-file>
+							${project.build.directory}/jacoco.exec</quarkus.jacoco.data-file>
 						<quarkus.jacoco.reuse-data-file>true</quarkus.jacoco.reuse-data-file>
 						<quarkus.jacoco.report-location>
-							${maven.multiModuleProjectDirectory}/${project.build.outputDirectory}/jacoco-report</quarkus.jacoco.report-location>
+							${project.build.directory}/coverage/</quarkus.jacoco.report-location>
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
