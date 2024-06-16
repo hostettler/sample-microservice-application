@@ -78,6 +78,28 @@ class OrganizationResourceTest {
         given().contentType("application/json").body(organization).when().put("/organizations").then().statusCode(201).body("postalCode",
                 equalTo("6687"));
     }
+    
+    
+
+    @Test
+    @TestSecurity(user = "boss@boss.com", roles = { "admin" })
+    void testUpdateNonExistingOrganization() {
+
+        Integer id = given().contentType("application/json").body("""
+                {
+                    "name": "organization 8798",
+                    "address": "Rue du pont 42A",
+                    "city": "Peta ouschnock les bains",
+                    "postalCode": "1232"
+                }
+                """).when().post("/organizations").then().statusCode(201).extract().body().jsonPath().get("id");
+
+        Organization organization = given().when().get(String.format("/organizations/%d", id)).then().statusCode(200).extract().body()
+                .as(Organization.class);
+        organization.setPostalCode("6687");
+        organization.id= 666l;
+        given().contentType("application/json").body(organization).when().put("/organizations").then().statusCode(404);
+    }
 
     
 
@@ -124,6 +146,34 @@ class OrganizationResourceTest {
         
         given().when().get(String.format("/organizations/%d", orgId)).then().statusCode(200).body("name", equalTo("organization 8"), "businessEntities.size()", equalTo(2));
 
+    }
+    
+    
+    
+
+    @Test
+    @TestSecurity(user = "john.doe@doe.com", roles = {"admin" }, attributes = { @SecurityAttribute(key = "answer", value = "42") })
+    void testAddNonExistingBusinessEntityToOrg() {
+                
+        Integer orgId = given().contentType(ContentType.JSON).body("""
+                {
+                    "name": "organization 48",
+                    "address": "Chemin de la terasse 1A",
+                    "city": "Peta ouschnock les bains",
+                    "postalCode": "1232"    
+                },
+                """).when().post("/organizations").then().statusCode(201).extract().body().jsonPath().get("id");
+        
+        String url = String.format("/organizations/add-business-entity/%d/%d", orgId, 666);
+        given().contentType(ContentType.JSON).when().put(url).then().statusCode(404);
+    }
+    
+    
+    @Test
+    @TestSecurity(user = "john.doe@doe.com", roles = {"admin" }, attributes = { @SecurityAttribute(key = "answer", value = "42") })
+    void testAddExistingBusinessEntityToNonExistingOrg() {
+        String url = String.format("/organizations/add-business-entity/%d/%d", 666, 666);
+        given().contentType(ContentType.JSON).when().put(url).then().statusCode(404);
     }
     
 }

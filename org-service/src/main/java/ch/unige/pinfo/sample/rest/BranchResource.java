@@ -2,7 +2,6 @@ package ch.unige.pinfo.sample.rest;
 
 import java.util.List;
 
-import org.jboss.logging.Logger;
 import org.jboss.resteasy.reactive.ResponseStatus;
 
 import ch.unige.pinfo.sample.model.Branch;
@@ -10,7 +9,6 @@ import io.quarkus.panache.common.Sort;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
@@ -23,8 +21,6 @@ import jakarta.ws.rs.core.MediaType;
 @Path("/branches")
 public class BranchResource {
 
-    private static final Logger LOG = Logger.getLogger(BranchResource.class);
-
     @GET
     @Path("/all")
     public List<Branch> list() {
@@ -33,13 +29,11 @@ public class BranchResource {
 
     @GET
     @Path("/ids")
-    @RolesAllowed({ "admin"})
+    @RolesAllowed({ "admin" })
     public List<Long> getIds() {
-        LOG.info("List all branch Ids");
         return Branch.find("select id from Branch").project(Long.class).list();
     }
 
-    
     @GET
     @Path("/{branchId}")
     public Branch get(@PathParam("branchId") String branchId) {
@@ -47,11 +41,11 @@ public class BranchResource {
     }
 
     @POST
-    @Transactional 
+    @Transactional
     @ResponseStatus(201)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({ "admin"})
+    @RolesAllowed({ "admin" })
     public Branch add(Branch branch) {
         Branch.persist(branch);
         return branch;
@@ -62,11 +56,11 @@ public class BranchResource {
     @ResponseStatus(201)
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({ "admin"})
+    @RolesAllowed({ "admin" })
     public Branch update(Branch branch) {
-        
+
         Branch entity = Branch.findById(branch.id);
-        if(entity == null) {
+        if (entity == null) {
             throw new NotFoundException();
         }
 
@@ -77,12 +71,4 @@ public class BranchResource {
         return branch;
     }
 
-    @DELETE
-    @Transactional 
-    @Path("/{id}")
-    @RolesAllowed({ "admin"})
-    public void delete(Long id) {
-        LOG.infof("delete branch by id : {}", id);
-        Branch.deleteById(id);
-    }
 }

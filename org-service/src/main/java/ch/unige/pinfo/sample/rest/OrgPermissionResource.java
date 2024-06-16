@@ -25,16 +25,9 @@ public class OrgPermissionResource {
     }
     
     @GET    
-    @Path("/{permissionId}")
+    @Path("/me")
     @RolesAllowed("admin")
-    public OrgPermission get(String permissionId) {
-        return OrgPermission.findById(permissionId);
-    }
-    
-    @GET    
-    @Path("/org/{orgId}")
-    @RolesAllowed("admin")
-    public List<OrgPermission> getOrgPermission(String orgId) {
+    public List<OrgPermission> getOrgPermission() {
         return OrgPermission.list("userId", userInfo.getEmail());
     }
 }

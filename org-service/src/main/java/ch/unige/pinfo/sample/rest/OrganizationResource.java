@@ -4,14 +4,12 @@ import java.util.List;
 
 import org.jboss.resteasy.reactive.ResponseStatus;
 
-import ch.unige.pinfo.sample.model.Branch;
 import ch.unige.pinfo.sample.model.BusinessEntity;
 import ch.unige.pinfo.sample.model.Organization;
 import io.quarkus.panache.common.Sort;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
@@ -86,11 +84,4 @@ public class OrganizationResource {
         org.addBusinessEntity(be);
     }
     
-    @DELETE
-    @Transactional
-    @Path("/{id}")
-    @RolesAllowed({ "admin"})
-    public void delete(Long id) {
-        Branch.deleteById(id);
-    }
 }
