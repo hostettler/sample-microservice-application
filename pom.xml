@@ -24,9 +24,9 @@
 		<sonar.coverage.jacoco.xmlReportPaths>
 			${project.build.directory}/jacoco-report/jacoco.xml,
 			${project.build.directory}/site/jacoco/jacoco.xml,
-			${project.build.directory}/coverage/jacoco.xml,
-			${maven.multiModuleProjectDirectory}/${project.build.directory}/jacoco-report/jacoco.xml,
-			${maven.multiModuleProjectDirectory}/${project.build.directory}/site/jacoco/jacoco.xml
+			user-service/${project.build.directory}/coverage/jacoco.xml,
+			org-service/${project.build.directory}/coverage/jacoco.xml,
+			account-service/${project.build.directory}/coverage/jacoco.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
