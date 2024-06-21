@@ -1,5 +1,7 @@
 package ch.unige.pinfo.sample.model;
 
+import java.time.LocalDate;
+
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Cacheable;
 import jakarta.persistence.Entity;
@@ -14,10 +16,6 @@ import lombok.EqualsAndHashCode;
 @Entity
 public class Transaction extends PanacheEntityBase {
 
-    public enum TransactionType {
-        DEBIT, CREDIT
-    }
-
     @Id
     @GeneratedValue
     Long id;
@@ -27,6 +25,5 @@ public class Transaction extends PanacheEntityBase {
     Double amount;
     String description;
     String currency;
-    TransactionType type;
-
+    LocalDate transactionDate;
 }

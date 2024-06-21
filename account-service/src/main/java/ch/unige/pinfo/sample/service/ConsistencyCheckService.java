@@ -4,8 +4,10 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.infinispan.Cache;
-import org.infinispan.manager.EmbeddedCacheManager;
+import org.jboss.logging.Logger;
 
+import ch.unige.pinfo.sample.utils.OrgsCache;
+import ch.unige.pinfo.sample.utils.UserCache;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
@@ -15,51 +17,50 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 public class ConsistencyCheckService {
 
-    EmbeddedCacheManager emc;
-    
+    private static final Logger LOG = Logger.getLogger(ConsistencyCheckService.class);
+  
+    Cache<String, String> users;   
+    Cache<String, String> orgs;
+
     @Inject
-    public ConsistencyCheckService(EmbeddedCacheManager emc) {
-        this.emc = emc;
+    public ConsistencyCheckService(@UserCache Cache<String, String> users, @OrgsCache Cache<String, String> orgs) {
+        this.users = users;
+        this.orgs = orgs;
     }
-    
+
     public boolean checkUserExists(String userId) {
-        return getUserCache().get(userId) != null;
+        LOG.info(String.format("Check user %s status:%s", userId, users.get(userId)));
+        return users.get(userId) != null;
     }
 
     public boolean checkOrganisationBranchId(String branchId) {
-        return getOrgCache().get(branchId) != null;
+        LOG.info(String.format("Check branch %s status:%s", branchId, orgs.get(branchId)));
+        return orgs.get(branchId) != null;
     }
 
-
-    
+       
     @Channel("user-command")
     Emitter<String> usersCommandsEmmitter;
     @Channel("org-command")
-    Emitter<String> orgsCommandsEmmitter;    
+    Emitter<String> orgsCommandsEmmitter;
 
     void onStart(@Observes StartupEvent ev) {
-      usersCommandsEmmitter.send("get-all");
-      orgsCommandsEmmitter.send("get-all");
+        usersCommandsEmmitter.send("get-all");
+        orgsCommandsEmmitter.send("get-all");
     }
 
     @Incoming("user-update")
     @Transactional
     public void updateUserIds(String userId) {
-        getUserCache().put(userId, userId);
+        LOG.info("Update user cache with " + userId);
+        users.put(userId, userId);
     }
-    
-    
+
     @Incoming("org-update")
     @Transactional
-    public void userCommand(String orgId) {
-        getUserCache().put(orgId, orgId);
+    public void updateOrgIds(String orgId) {
+        LOG.info("Update org cache with " + orgId);
+        orgs.put(orgId, orgId);
     }
-    
-    private Cache<String, String> getUserCache() {
-        return emc.getCache("users");
-    }
-    
-    private Cache<String, String> getOrgCache() {
-        return emc.getCache("orgs");
-    }
+
 }

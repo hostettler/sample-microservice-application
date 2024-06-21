@@ -23,3 +23,5 @@ status) VALUES (
 'EUR',
 0,
 0);
+
+ALTER SEQUENCE accounts_seq RESTART WITH 500;
