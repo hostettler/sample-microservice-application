@@ -66,4 +66,10 @@ public class BalanceService {
         account.persist();
     }
 
+    @Transactional
+    public Account getAccount(String iban) {
+        LOG.info("Create account " + iban);
+        return Account.find("iban", iban).firstResult();
+    }
+
 }

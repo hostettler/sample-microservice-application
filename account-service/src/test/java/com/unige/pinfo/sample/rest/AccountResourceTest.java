@@ -4,13 +4,18 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 import java.math.BigDecimal;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
+import org.awaitility.Awaitility;
 import org.eclipse.microprofile.reactive.messaging.spi.Connector;
+import org.infinispan.Cache;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ch.unige.pinfo.sample.model.Account;
+import ch.unige.pinfo.sample.utils.UserCache;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
@@ -26,15 +31,28 @@ class AccountResourceTest {
     @Connector("smallrye-in-memory")
     InMemoryConnector inMemoryConnector;
 
+    @Inject
+    @UserCache
+    Cache<String, String> users;
+
     @BeforeEach
-    void init() throws InterruptedException {
+    void init() {
         InMemorySource<String> userUpdate = inMemoryConnector.source("user-update");
         userUpdate.send("1234");
         userUpdate.send("6789");
 
         InMemorySource<String> orgUpdate = inMemoryConnector.source("org-update");
         orgUpdate.send("4567");
-        Thread.sleep(1000);
+
+        Callable<Boolean> actualValueSupplier = new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return users.get("6789") != null;
+            }
+        };
+
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).until(actualValueSupplier, equalTo(true));
+
     }
 
     @Test

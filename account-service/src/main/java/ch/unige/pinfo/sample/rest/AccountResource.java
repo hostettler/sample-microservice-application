@@ -1,7 +1,5 @@
 package ch.unige.pinfo.sample.rest;
 
-import java.math.BigDecimal;
-
 import org.jboss.resteasy.reactive.ResponseStatus;
 
 import ch.unige.pinfo.sample.model.Account;

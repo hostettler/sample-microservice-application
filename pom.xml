@@ -25,10 +25,6 @@
 			${project.build.directory}/jacoco-report/jacoco.xml,
 			${project.build.directory}/site/jacoco/jacoco.xml,
 			${project.build.directory}/coverage/jacoco.xml
-			<!--,
-			user-service/${project.build.directory}/coverage/jacoco.xml,
-			org-service/${project.build.directory}/coverage/jacoco.xml,
-			account-service/${project.build.directory}/coverage/jacoco.xml-->
 		</sonar.coverage.jacoco.xmlReportPaths>
 		<!-- Sonar -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
@@ -44,7 +40,6 @@
 		<module>user-service</module>
 		<module>account-service</module>
 		<module>org-service</module>
-		<!--<module>aggregate-coverage-report</module>-->
 	</modules>
 
 

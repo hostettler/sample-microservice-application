@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.concurrent.TimeUnit;
 
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import ch.unige.pinfo.sample.service.ConsistencyCheckService;
 import ch.unige.pinfo.sample.service.TransactionService;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import jakarta.ws.rs.NotFoundException;
 
 @QuarkusTest
@@ -27,19 +30,21 @@ class TransactionServiceTest {
     @Inject
     BalanceService balanceService;
     @Inject
-    TransactionService transactionService;    
+    TransactionService transactionService;
+    @Inject
+    EntityManager em;
 
     @BeforeEach
     void init() {
         consistencyCheckService.updateUserIds("1234");
         consistencyCheckService.updateUserIds("1234XXXXX");
         consistencyCheckService.updateUserIds("6789");
-        
+
         consistencyCheckService.updateOrgIds("4567");
     }
 
     @Test
-    void testExecuteTransactionService() throws InterruptedException {
+    void testExecuteTransactionService() {
 
         Account account = new Account();
         account.setAccountHolderUserId("1234");
@@ -76,7 +81,11 @@ class TransactionServiceTest {
 
         transactionService.execute(transaction);
 
-        Thread.sleep(2000);
+        Awaitility.await().atMost(2, TimeUnit.SECONDS).until(() -> {
+            Account sourceAccount = balanceService.getAccount("123456789");
+            Account targetAccount = balanceService.getAccount("1234XXXXX");
+            return sourceAccount.getBalance().doubleValue() == 0d && targetAccount.getBalance().doubleValue() == 900d;
+        });
 
         Account sourceAccount = Account.find("iban", "123456789").firstResult();
         Account targetAccount = Account.find("iban", "1234XXXXX").firstResult();
@@ -95,7 +104,7 @@ class TransactionServiceTest {
     }
 
     @Test
-    void testUnknownAccountsExecuteTransactionService() throws InterruptedException {
+    void testUnknownAccountsExecuteTransactionService() {
 
         Account account = new Account();
         account.setAccountHolderUserId("1234");
