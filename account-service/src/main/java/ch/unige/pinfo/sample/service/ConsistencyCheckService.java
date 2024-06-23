@@ -29,12 +29,12 @@ public class ConsistencyCheckService {
     }
 
     public boolean checkUserExists(String userId) {
-        LOG.info(String.format("Check user %s status:%s", userId, users.get(userId)));
+        LOG.debug(String.format("Check user %s status:%s", userId, users.get(userId)));
         return users.get(userId) != null;
     }
 
     public boolean checkOrganisationBranchId(String branchId) {
-        LOG.info(String.format("Check branch %s status:%s", branchId, orgs.get(branchId)));
+        LOG.debug(String.format("Check branch %s status:%s", branchId, orgs.get(branchId)));
         return orgs.get(branchId) != null;
     }
 
@@ -52,14 +52,14 @@ public class ConsistencyCheckService {
     @Incoming("user-update")
     @Transactional
     public void updateUserIds(String userId) {
-        LOG.info("Update user cache with " + userId);
+        LOG.debug("Update user cache with " + userId);
         users.put(userId, userId);
     }
 
     @Incoming("org-update")
     @Transactional
     public void updateOrgIds(String orgId) {
-        LOG.info("Update org cache with " + orgId);
+        LOG.debug("Update org cache with " + orgId);
         orgs.put(orgId, orgId);
     }
 

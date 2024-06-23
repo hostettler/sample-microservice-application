@@ -44,7 +44,7 @@
 		<module>user-service</module>
 		<module>account-service</module>
 		<module>org-service</module>
-		<module>aggregate-coverage-report</module>
+		<!--<module>aggregate-coverage-report</module>-->
 	</modules>
 
 

@@ -11,3 +11,14 @@ org-service
 --> sends new org to the rabbit mq 
 user-service
 --> sends new user to the rabbit mq 
+
+
+Here is a simple flow chart:
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```

@@ -18,23 +18,30 @@ public class BalanceService {
     private static final Logger LOG = Logger.getLogger(BalanceService.class);
 
     ConsistencyCheckService consistencyCheckService;
-    
+
     @Inject
     BalanceService(ConsistencyCheckService consistencyCheckService) {
         this.consistencyCheckService = consistencyCheckService;
     }
-    
+
     @Incoming("journal-update")
     @Transactional
     public void updateBalance(JournalEntry entry) {
+        LOG.debug(String.format("Update balance for entry %s", entry));
         Account account = Account.find("iban", entry.getIban()).firstResult();
         if (account == null) {
+            LOG.error("Account not found for iban " + entry.getIban());
             throw new NotFoundException("Account not found");
         }
+        LOG.debug(String.format("Update balance for account %s with %s", account.getIban(), entry.getAmount()));
         if (entry.getType() == JournalEntry.TransactionType.DEBIT) {
-            account.setBalance(account.getBalance().subtract(BigDecimal.valueOf(entry.getAmount())));
+            BigDecimal balance = account.getBalance().subtract(BigDecimal.valueOf(entry.getAmount()));
+            account.setBalance(balance);
+            LOG.debug(String.format("New balance for account %s is %s", account.getIban(), balance));
         } else if (entry.getType() == JournalEntry.TransactionType.CREDIT) {
-            account.setBalance(account.getBalance().add(BigDecimal.valueOf(entry.getAmount())));
+            BigDecimal balance = account.getBalance().add(BigDecimal.valueOf(entry.getAmount()));
+            account.setBalance(balance);
+            LOG.debug(String.format("New balance for account %s is %s", account.getIban(), balance));
         }
     }
 
@@ -45,26 +52,18 @@ public class BalanceService {
         if (!consistencyCheckService.checkUserExists(account.getAccountHolderUserId())) {
             throw new IllegalArgumentException(String.format("Account Holder %s does not exist", account.getAccountHolderUserId()));
         }
-        
+
         LOG.info("Check account manager " + account.getAccountManagerUserId());
         if (!consistencyCheckService.checkUserExists(account.getAccountManagerUserId())) {
             throw new IllegalArgumentException(String.format("Account Manager %s does not exist", account.getAccountManagerUserId()));
         }
-        
+
         LOG.info("Check branch " + account.getBranchId());
         if (!consistencyCheckService.checkOrganisationBranchId(account.getBranchId())) {
             throw new IllegalArgumentException(String.format("Branch %s does not exist", account.getBranchId()));
         }
-        
+
         account.persist();
     }
 
-    @Transactional
-    public void updateBalance(String accountId, BigDecimal amount) {
-        Account account = Account.find("iban", accountId).firstResult();
-        if (account == null) {
-            throw new NotFoundException("Account not found");
-        }
-        account.setBalance(account.getBalance().add(amount));
-    }
 }

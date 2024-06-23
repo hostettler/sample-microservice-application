@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import ch.unige.pinfo.sample.model.Account;
+import ch.unige.pinfo.sample.model.JournalEntry;
 import ch.unige.pinfo.sample.service.BalanceService;
 import ch.unige.pinfo.sample.service.ConsistencyCheckService;
 import io.quarkus.test.junit.QuarkusTest;
@@ -21,9 +22,10 @@ class BalanceServiceTest {
 
     @Inject
     ConsistencyCheckService consistencyCheckService;
-    
+
     @Inject
     BalanceService balanceService;
+
     @BeforeEach
     void init() {
         consistencyCheckService.updateUserIds("1234");
@@ -32,28 +34,117 @@ class BalanceServiceTest {
     }
 
     @Test
-    void testUpdateBalance() {
+    void testUpdateBalanceCredit() {
         Account account = new Account();
         account.setAccountHolderUserId("1234");
         account.setBranchId("4567");
         account.setAccountManagerUserId("6789");
-        account.setIban("9101112");
+        account.setIban("9101112U");
         account.setCreationDate(LocalDate.now());
-        account.setBalance(new BigDecimal("0.0"));
+        account.setBalance(new BigDecimal("1000.0"));
         account.setInterest(new BigDecimal("0.0"));
         account.setBalanceUpdatedDate(LocalDate.now());
         account.setCurrency("CHF");
         account.setType(Account.Type.CHECKING);
-        System.out.println("Account to create : " + account);
         balanceService.createAccount(account);
-        System.out.println("Account created : " + account);
 
-        balanceService.updateBalance("9101112", new BigDecimal("100.0"));
+        JournalEntry entry = new JournalEntry();
+        entry.setIban(account.getIban());
+        entry.setAmount(100.0);
+        entry.setType(JournalEntry.TransactionType.CREDIT);
+        entry.setOriginalCurrency("CHF");
 
-        account = Account.findById(account.getId());
-        Assertions.assertEquals(new BigDecimal("100.00"), account.getBalance());
+        balanceService.updateBalance(entry);
 
-        assertThrows(NotFoundException.class, () -> balanceService.updateBalance("XXXXX", new BigDecimal("100.0")));
-        
+        account = Account.find("iban", "9101112U").firstResult();
+        Assertions.assertEquals(new BigDecimal("1100.00"), account.getBalance());
+
+    }
+
+    @Test
+    void testUpdateBalanceDebit() {
+        Account account = new Account();
+        account.setAccountHolderUserId("1234");
+        account.setBranchId("4567");
+        account.setAccountManagerUserId("6789");
+        account.setIban("42345232342");
+        account.setCreationDate(LocalDate.now());
+        account.setBalance(new BigDecimal("1000.0"));
+        account.setInterest(new BigDecimal("0.0"));
+        account.setBalanceUpdatedDate(LocalDate.now());
+        account.setCurrency("CHF");
+        account.setType(Account.Type.CHECKING);
+        balanceService.createAccount(account);
+
+        JournalEntry entry = new JournalEntry();
+        entry.setIban(account.getIban());
+        entry.setAmount(100.0);
+        entry.setType(JournalEntry.TransactionType.DEBIT);
+        entry.setOriginalCurrency("CHF");
+
+        balanceService.updateBalance(entry);
+
+        account = Account.find("iban", "42345232342").firstResult();
+        Assertions.assertEquals(new BigDecimal("900.00"), account.getBalance());
+
+    }
+
+    @Test
+    void testUpdateBalanceOfUnknownAccount() {
+        final JournalEntry entry = new JournalEntry();
+        entry.setIban("XXXX");
+        entry.setAmount(100.0);
+        entry.setType(JournalEntry.TransactionType.CREDIT);
+        entry.setOriginalCurrency("CHF");
+
+        assertThrows(NotFoundException.class, () -> balanceService.updateBalance(entry));
+    }
+
+    @Test
+    void testCreateAccountWitUknownAccountHolder() {
+        Account account = new Account();
+        account.setAccountHolderUserId("1234XX");
+        account.setBranchId("4567");
+        account.setAccountManagerUserId("6789");
+        account.setIban("42345232342");
+        account.setCreationDate(LocalDate.now());
+        account.setBalance(new BigDecimal("1000.0"));
+        account.setInterest(new BigDecimal("0.0"));
+        account.setBalanceUpdatedDate(LocalDate.now());
+        account.setCurrency("CHF");
+        account.setType(Account.Type.CHECKING);
+        assertThrows(IllegalArgumentException.class, () -> balanceService.createAccount(account));        
+    }
+    
+    @Test
+    void testCreateAccountWitUknownAccountManager() {
+        Account account = new Account();
+        account.setAccountHolderUserId("1234");
+        account.setBranchId("4567");
+        account.setAccountManagerUserId("6789XX");
+        account.setIban("42345232342");
+        account.setCreationDate(LocalDate.now());
+        account.setBalance(new BigDecimal("1000.0"));
+        account.setInterest(new BigDecimal("0.0"));
+        account.setBalanceUpdatedDate(LocalDate.now());
+        account.setCurrency("CHF");
+        account.setType(Account.Type.CHECKING);
+        assertThrows(IllegalArgumentException.class, () -> balanceService.createAccount(account));        
+    }
+    
+    @Test
+    void testCreateAccountWitUknownBranch() {
+        Account account = new Account();
+        account.setAccountHolderUserId("1234");
+        account.setBranchId("4567XX");
+        account.setAccountManagerUserId("6789");
+        account.setIban("42345232342");
+        account.setCreationDate(LocalDate.now());
+        account.setBalance(new BigDecimal("1000.0"));
+        account.setInterest(new BigDecimal("0.0"));
+        account.setBalanceUpdatedDate(LocalDate.now());
+        account.setCurrency("CHF");
+        account.setType(Account.Type.CHECKING);
+        assertThrows(IllegalArgumentException.class, () -> balanceService.createAccount(account));        
     }
 }
