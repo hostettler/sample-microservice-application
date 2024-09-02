@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class BusinessEntity extends AbstractOrganizationStructureElement {
 
     private static final long serialVersionUID = 1180847886550924080L;
     
-    @OneToMany(mappedBy = "businessEntity")
+    @OneToMany(mappedBy = "businessEntity", fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Branch> branches;
 
